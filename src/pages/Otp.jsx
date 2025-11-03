@@ -1,18 +1,20 @@
+// src/pages/Otp.jsx
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 
 const Otp = () => {
   const [otp, setOtp] = useState('');
   const navigate = useNavigate();
-  const CORRECT_OTP = '123456';
 
-  const handleVerify = (e) => {
+  const handleVerify = async (e) => {
     e.preventDefault();
-    if (otp === CORRECT_OTP) {
+    try {
+      const confirmationResult = window.confirmationResult;
+      await confirmationResult.confirm(otp);
       localStorage.setItem('isAuthenticated', 'true');
       navigate('/restaurants', { replace: true });
-    } else {
-      alert('Invalid OTP. Try 123456');
+    } catch (error) {
+      alert('Invalid OTP');
     }
   };
 
