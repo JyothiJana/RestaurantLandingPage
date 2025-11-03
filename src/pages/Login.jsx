@@ -54,7 +54,6 @@ const Login = () => {
       <div className='bg-white/10 backdrop-blur-md border border-white/20 p-10 rounded-2xl shadow-2xl w-96 text-center'>
         <h2 className='text-3xl font-bold text-white mb-6'>Login with Phone</h2>
 
-        {/* ✅ Using react-phone-input-2 component */}
         <PhoneInput
           country={'in'} // Default India
           value={phone}
