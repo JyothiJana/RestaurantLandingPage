@@ -3,7 +3,7 @@ import React, { useState } from 'react';
 import { RecaptchaVerifier, signInWithPhoneNumber } from 'firebase/auth';
 import { auth } from '../firebase';
 import { useNavigate } from 'react-router-dom';
-import 'react-phone-input-2/lib/style.css'; // <-- important
+import 'react-phone-input-2/lib/style.css';
 import PhoneInput from 'react-phone-input-2';
 
 const Login = () => {
@@ -11,24 +11,33 @@ const Login = () => {
   const navigate = useNavigate();
 
   const setupRecaptcha = () => {
-    window.recaptchaVerifier = new RecaptchaVerifier(
-      auth,
-      'recaptcha-container',
-      {
-        size: 'invisible',
-      }
-    );
+    if (!window.recaptchaVerifier) {
+      window.recaptchaVerifier = new RecaptchaVerifier(
+        auth,
+        'recaptcha-container',
+        {
+          size: 'invisible',
+        }
+      );
+    }
   };
 
   const handleNext = async (e) => {
     e.preventDefault();
-    if (phone.length < 5) return alert('Enter valid phone number');
+
+    // Remove non-numeric characters
+    const cleanedPhone = phone.replace(/\D/g, '');
+
+    // Validate phone number
+    if (cleanedPhone.length < 10) {
+      return alert('Please enter a valid 10-digit phone number');
+    }
 
     setupRecaptcha();
     const appVerifier = window.recaptchaVerifier;
+    const formattedPhone = `+${cleanedPhone}`;
 
     try {
-      const formattedPhone = `+${phone}`; // PhoneInput returns number without "+"
       const confirmationResult = await signInWithPhoneNumber(
         auth,
         formattedPhone,
@@ -55,7 +64,7 @@ const Login = () => {
         <h2 className='text-3xl font-bold text-white mb-6'>Login with Phone</h2>
 
         <PhoneInput
-          country={'in'} // Default India
+          country={'in'}
           value={phone}
           onChange={setPhone}
           inputStyle={{
