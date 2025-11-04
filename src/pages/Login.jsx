@@ -3,8 +3,7 @@ import React, { useState } from 'react';
 import { RecaptchaVerifier, signInWithPhoneNumber } from 'firebase/auth';
 import { auth } from '../firebase';
 import { useNavigate } from 'react-router-dom';
-import 'react-phone-input-2/lib/style.css';
-import PhoneInput from 'react-phone-input-2';
+import InputField from '../components/InputField';
 
 const Login = () => {
   const [phone, setPhone] = useState('');
@@ -25,10 +24,7 @@ const Login = () => {
   const handleNext = async (e) => {
     e.preventDefault();
 
-    // Remove non-numeric characters
     const cleanedPhone = phone.replace(/\D/g, '');
-
-    // Validate phone number
     if (cleanedPhone.length < 10) {
       return alert('Please enter a valid 10-digit phone number');
     }
@@ -63,20 +59,11 @@ const Login = () => {
       <div className='bg-white/10 backdrop-blur-md border border-white/20 p-10 rounded-2xl shadow-2xl w-96 text-center'>
         <h2 className='text-3xl font-bold text-white mb-6'>Login with Phone</h2>
 
-        <PhoneInput
-          country={'in'}
+        <InputField
+          type='phone'
           value={phone}
           onChange={setPhone}
-          inputStyle={{
-            width: '100%',
-            background: 'rgba(255,255,255,0.2)',
-            color: 'white',
-            border: 'none',
-            borderRadius: '8px',
-            padding: '10px',
-          }}
-          buttonStyle={{ border: 'none' }}
-          dropdownStyle={{ color: 'black' }}
+          placeholder='Enter phone number'
         />
 
         <button
